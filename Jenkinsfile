@@ -1,6 +1,21 @@
 pipeline {
 
-  agent any
+  agent {
+  kubernetes {
+              //cloud 'kubernetes'
+              label 'terraform'
+              yaml """
+                apiVersion: v1
+               kind: Pod
+        spec:
+          containers:
+          - name: terraform
+            image: harshicorp/terraform
+            command: ['cat']
+            tty: true
+        """
+            }
+  }
 
   environment {
     SVC_ACCOUNT_KEY = credentials('terraform-auth')
