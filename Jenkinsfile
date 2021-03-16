@@ -3,8 +3,7 @@ pipeline {
   agent {
   kubernetes {
               //cloud 'kubernetes'
-              label 'terraform'
-              yaml """
+               yaml """
                 apiVersion: v1
                kind: Pod
         spec:
