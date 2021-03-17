@@ -1,7 +1,9 @@
 pipeline {
 
   agent {
-    kubernetes
+    kubernetes{
+    
+    }
   }
   
 
