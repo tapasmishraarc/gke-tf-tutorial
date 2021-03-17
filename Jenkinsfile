@@ -1,27 +1,55 @@
-pipeline {
+def project = 'affable-anagram-300714' //change
+//def  appName = 'gceme'
+//def  feSvcName = "${appName}-frontend"
+//def  imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
 
+ 
+
+pipeline {
   agent {
-    kubernetes{
-    label 'sample-app'
-defaultContainer 'jnlp'
-yaml """
+    kubernetes {
+      label 'sample-app'
+      defaultContainer 'jnlp'
+      yaml """
 apiVersion: v1
 kind: Pod
 metadata:
 labels:
-component: ci
+  component: ci
 spec:
-# Use service account that can deploy to all namespaces
-serviceAccountName: cd-jenkins
-containers:
-- name: terraform
-image: hashicorp/terraform
-command:
-- cat
- tty: true
- """
-    }
+  # Use service account that can deploy to all namespaces
+  serviceAccountName: cd-jenkins
+  containers:
+  - name: terraform
+    image: hashicorp/terraform
+    command:
+    - cat
+    tty: true
+  - name: docker
+    image: trion/jenkins-docker-client
+    command: ['docker', 'run', '-p', '80:80', 'httpd:latest'] 
+    resources: 
+        requests: 
+            cpu: 10m 
+            memory: 256Mi 
+    volumeMounts: 
+       - mountPath: /var/run 
+         name: docker-sock 
+    tty: true
+  - name: kubectl
+    image: gcr.io/cloud-builders/kubectl
+    command:
+    - cat
+    tty: true
+  volumes: 
+     - name: docker-sock 
+       hostPath: 
+           path: /var/run 
+    
+"""
+}
   }
+ 
   
 
   environment {
