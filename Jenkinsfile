@@ -20,11 +20,15 @@ spec:
   # Use service account that can deploy to all namespaces
   serviceAccountName: cd-jenkins
   containers:
-  - name: terraform
-    image: hashicorp/terraform
+  - name: kubectl
+    image: gcr.io/cloud-builders/kubectl
     command:
     - cat
     tty: true
+  volumes: 
+     - name: docker-sock 
+       hostPath: 
+           path: /var/run 
     
 """
 }
