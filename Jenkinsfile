@@ -25,17 +25,7 @@ spec:
     command:
     - cat
     tty: true
-  - name: docker
-    image: trion/jenkins-docker-client
-    command: ['docker', 'run', '-p', '80:80', 'httpd:latest'] 
-    resources: 
-        requests: 
-            cpu: 10m 
-            memory: 256Mi 
-    volumeMounts: 
-       - mountPath: /var/run 
-         name: docker-sock 
-    tty: true
+  
   - name: kubectl
     image: gcr.io/cloud-builders/kubectl
     command:
